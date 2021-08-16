@@ -37,7 +37,8 @@ const UsuarioSchema = Schema({
 
 //esto es un metodo que sobreescribe el toJSON para que cuando se devuelva un usuario no traiga ni el __v y password
 UsuarioSchema.methods.toJSON = function(){
-    const { __v , password, ...usuario } = this.toObject();
+    const { __v , password, _id ,...usuario } = this.toObject();
+    usuario.uid = _id;
     return usuario;
 }
 
