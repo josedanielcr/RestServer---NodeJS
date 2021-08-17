@@ -71,7 +71,7 @@ const googleSignIn = async( req = request , res = response ) => {
                 nombre,
                 correo,
                 password : ':D',
-                img,
+                imagen : img,
                 google: true
             }
             usuario = new Usuario( data );
