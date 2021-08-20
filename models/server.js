@@ -5,16 +5,19 @@ const fileUpload = require('express-fileupload');
 const {
     dbConnection
 } = require('../database/config');
+const { socketController } = require('../sockets/controller.sockets');
 
 class Server {
 
 
     constructor() {
-        this.app            = express();
-        this.port           = process.env.PORT;
+        this.app    = express();
+        this.port   = process.env.PORT;
+        this.server = require('http').createServer( this.app );
+        this.io     = require('socket.io')( this.server );
 
         //rutas
-        this.rutas          = {
+        this.rutas  = {
             auth       : '/api/auth',
             buscar     : '/api/buscar',
             categorias : '/api/categorias',
@@ -31,6 +34,9 @@ class Server {
 
         //rotas de mi aplicacion
         this.routes();
+
+        //sockets
+        this.sockets();
     }
 
 
@@ -70,8 +76,13 @@ class Server {
     }
 
 
+    sockets(){
+        this.io.on("connection", socketController );
+    }
+
+
     listen(){
-        this.app.listen( this.port , () => {
+        this.server.listen( this.port , () => {
             console.log( 'sevidor corriendo en el puerto ', this.port );
         });
     }
